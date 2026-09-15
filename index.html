@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#E31C24" />
+  <title>Nabati Converter</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div class="brand">
+        <img src="logo.png" alt="Nabati Logo" class="brand-logo">
+        <div class="brand-info">
+          <h1>NABATI <span>Converter</span></h1>
+          <p class="subtitle">Konversi data penjualan Excel → Hasil Olah → Template Import (.xlsx, .csv, .txt) secara otomatis.</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="badges">
+          <span class="badge">2 Tahap Otomatis</span>
+          <span class="badge badge-dark">100% Browser Offline</span>
+        </div>
+        <button id="themeToggleBtn" class="theme-toggle-btn" type="button" title="Ganti Mode Gelap / Terang">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="grid-layout">
+      <!-- Main Converter Container -->
+      <div class="card main-card">
+        <div class="setup-grid">
+          <div>
+            <h2 style="font-size:18px; font-weight:800; margin-bottom:4px;">Upload File Penjualan</h2>
+            <p class="subtitle">Bisa menggunakan file <strong>Sebelum di Olah</strong> atau <strong>Sesudah di Olah</strong>. Sistem mendeteksi otomatis.</p>
+          </div>
+          <div class="field">
+            <label for="branchSelect">BRANCH TARGET IMPORT</label>
+            <div class="select-wrapper">
+              <select id="branchSelect">
+                <option value="">Pilih Branch Target...</option>
+                <option value="1764907397498" data-prefix="AM">Air Molek — 1764907397498</option>
+                <option value="1764907108089" data-prefix="UB">Ujung Batu — 1764907108089</option>
+              </select>
+              <div class="select-arrow">▼</div>
+            </div>
+            <div class="branch-help">companyID otomatis <code>NS6081030004380</code></div>
+          </div>
+        </div>
+
+        <div id="dropzone" class="dropzone" tabindex="0">
+          <div>
+            <div class="upload-icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+            <div class="drop-title">Tarik & Letakkan File Excel di Sini</div>
+            <div class="drop-desc">Mendukung format .xlsx & .xls · Aman & diproses lokal di browser</div>
+            <div class="drop-actions">
+              <button id="chooseBtn" class="btn btn-red" type="button">Pilih File Excel</button>
+              <button id="demoBtn" class="btn btn-outline" type="button" title="Gunakan data contoh untuk pengujian langsung">Coba Demo Data</button>
+            </div>
+            <input id="fileInput" type="file" accept=".xlsx,.xls">
+          </div>
+        </div>
+
+        <div id="fileInfo" class="file-info">
+          <div class="file-details">
+            <div class="file-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <div>
+              <div id="fileName" class="file-name"></div>
+              <div id="fileMeta" class="file-meta"></div>
+            </div>
+          </div>
+          <button id="clearBtn" class="btn btn-light" type="button">Hapus</button>
+        </div>
+
+        <div class="actions">
+          <button id="processBtn" class="btn btn-red" disabled>Proses Data</button>
+          <button id="downloadProcessedBtn" class="btn btn-light" disabled>Hasil Olah (.xlsx)</button>
+          <button id="downloadImportXlsxBtn" class="btn btn-dark" disabled>Import File (.xlsx)</button>
+          <button id="downloadImportBtn" class="btn btn-light" disabled>CSV Import (.csv)</button>
+          <button id="downloadImportTxtBtn" class="btn btn-light" disabled>TXT Import (.txt · |)</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div id="stats" class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Jenis Input</div>
+            <div id="inputType" class="stat-value">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Baris Data</div>
+            <div id="rowCount" class="stat-value">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Branch Target</div>
+            <div id="branchName" class="stat-value">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Disc &lt; 100 Dikonversi</div>
+            <div id="discountCount" class="stat-value">0</div>
+          </div>
+        </div>
+
+        <div id="previewSection" class="preview-section">
+          <div class="preview-head">
+            <div class="preview-title">Preview Ready-Import Data</div>
+            <div class="preview-controls">
+              <input id="searchInput" type="text" class="search-input" placeholder="Cari di preview table...">
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table id="previewTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Guide Card -->
+      <aside class="card side-card">
+        <h2>Aturan Process & Import</h2>
+        
+        <div class="stage">
+          <div class="stage-label"><span class="num">1</span> Pengolahan Data Sales</div>
+          <ul class="rules">
+            <li>Konversi ID ke Number & tanggal ke <code>yyyy-mm-dd</code>.</li>
+            <li>Pecah <strong>SATUAN/ISI</strong> menjadi <strong>SATU, AN/, ISI</strong>.</li>
+            <li><strong>HARGA PCS = JMLBRUTTO / QUANTITY</strong>.</li>
+            <li><strong>HARGA CTN = HARGA PCS × AN/</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="stage">
+          <div class="stage-label"><span class="num">2</span> Mapping Template Import</div>
+          <ul class="rules">
+            <li>salesmanID ← SLSNO; salesorderNumber ← NO.FAKTUR.</li>
+            <li>salesorderDate ← TGLFAKTUR; invoiceDate ← TGL PENGANTARAN.</li>
+            <li>invoiceNumber = <code>I + salesorderNumber</code>.</li>
+            <li>3 customer ID ← OUTLET; productCode ← PCODE; qtySold ← QUANTITY.</li>
+            <li>sellingPrice ← HARGA CTN (2 desimal).</li>
+            <li>Disc1 ← PROMO UANG; Disc2 ← RP.DISC2; Disc3 ← RP.DISCPC; Disc4 ← RP.DISC1; Disc5 ← DISCOUNT.</li>
+            <li>Disc nominal non-zero &lt; 100 dikonversi otomatis: <code>(disc / sellingPrice) × 100</code> (2 desimal <strong>tanpa %</strong>).</li>
+          </ul>
+        </div>
+
+        <div class="branch-box">
+          <strong>ID Branch Reference:</strong><br>
+          • Air Molek: <code>1764907397498</code><br>
+          • Ujung Batu: <code>1764907108089</code><br><br>
+          <strong>Konstanta Template:</strong><br>
+          • companyID: <code>NS6081030004380</code><br>
+          • divisionID: <code>1717050000000</code><br>
+          • warehouseID: <code>STANDARD</code>
+        </div>
+
+        <div class="note">
+          <strong>Catatan Template:</strong> Nilai <code>qtyFreeGood = 0</code>, <code>term = T000</code>, <code>productvarianCode = -</code>, <code>barcodeList = -</code>, dan <code>isSKU = N</code> telah disesuaikan dengan format standar template import Nabati.
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      Nabati Converter v2.5 · Powered by SheetJS · Local Browser Processing
+    </footer>
+  </main>
+
+  <!-- SheetJS Library -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <!-- Application JS -->
+  <script src="js/app.js"></script>
+</body>
+</html>
